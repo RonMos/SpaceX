@@ -14,24 +14,33 @@ import JGProgressHUD
 
 
 
-class ViewController: UITableViewController {
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     var allLaunches: Launches = []
     let hud = JGProgressHUD(style: .dark)
     var selectedFlight: Launche?
     
+    @IBOutlet weak var tableview: UITableView!
+    
     var oneLaunch: Launche?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableview.dataSource = self
+        tableview.delegate = self
+        
+        tableview.keyboardDismissMode = .onDrag
+        tableview.contentInset = UIEdgeInsets(top: 64.0, left: 0.0, bottom: 0.0, right: 0.0)
         
         let cellNib = UINib(nibName: "launchCell", bundle: nil)
-        tableView.register(cellNib, forCellReuseIdentifier: "launchCell")
+        tableview.register(cellNib, forCellReuseIdentifier: "launchCell")
+        
+        navigationItem.hidesSearchBarWhenScrolling = false
         
         fetchLaunches()
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cellIdentifier = "launchCell"
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! launchCell
@@ -42,7 +51,7 @@ class ViewController: UITableViewController {
         return cell
     }
 
-    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         selectedFlight = allLaunches[indexPath.row]
         oneLaunch = selectedFlight
        // print("Cell tapped")
@@ -50,11 +59,11 @@ class ViewController: UITableViewController {
       return indexPath
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.performSegue(withIdentifier: "showDetail", sender: nil)
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return allLaunches.count
     }
     
@@ -66,7 +75,7 @@ class ViewController: UITableViewController {
 //            print("One launch")
 //            destinationVC.flight = selectedFlight
 //            print(oneLaunch)
-//        
+//
         if segue.destination is DetailViewController
         {
             let vc = segue.destination as? DetailViewController
@@ -93,7 +102,7 @@ extension ViewController {
             //print(lanches)
             self.allLaunches = lanches
             self.isHUDOn(isON: false)
-            self.tableView.reloadData()
+            self.tableview.reloadData()
         }
     }
     
