@@ -48,7 +48,7 @@ class MainVC: UIViewController {
         mainView.tableView.delegate = self
         mainView.searchBar.delegate = self
         mainView.tableView.keyboardDismissMode = .onDrag
-        mainView.tableView.contentInset = UIEdgeInsets(top: 64.0, left: 0.0, bottom: 0.0, right: 0.0)
+        //mainView.tableView.contentInset = UIEdgeInsets(top: 64.0, left: 0.0, bottom: 0.0, right: 0.0)
         
         navigationItem.hidesSearchBarWhenScrolling = false
         mainScreeValues.howToSort = UserDefaults.standard.integer(forKey: "Sort")
@@ -69,21 +69,24 @@ class MainVC: UIViewController {
     }
     
     @IBAction func sortButtonPressed(_ sender: Any) {
-        let alert = UIAlertController(title: "Choose sort type", message: "Please Select an Option", preferredStyle: .actionSheet)
+        if mainScreeValues.allLaunches != nil {
+            
+            let alert = UIAlertController(title: "Choose sort type", message: "Please Select an Option", preferredStyle: .actionSheet)
 
-        alert.addAction(UIAlertAction(title: "Sort by name", style: .default , handler:{ (UIAlertAction) in
-            self.mainScreeValues.allLaunches = self.sort(wayToSort: 1, objectToSort: self.mainScreeValues.allLaunches!)
-            self.mainView.tableView.reloadData()
-        }))
+            alert.addAction(UIAlertAction(title: "Sort by name", style: .default , handler:{ (UIAlertAction) in
+                self.mainScreeValues.allLaunches = self.sort(wayToSort: 1, objectToSort: self.mainScreeValues.allLaunches!)
+                self.mainView.tableView.reloadData()
+            }))
 
-        alert.addAction(UIAlertAction(title: "Sort by launch number", style: .default , handler:{ (UIAlertAction) in
-            self.mainScreeValues.allLaunches = self.sort(wayToSort: 0, objectToSort: self.mainScreeValues.allLaunches!)
-            self.mainView.tableView.reloadData()
-        }))
+            alert.addAction(UIAlertAction(title: "Sort by launch number", style: .default , handler:{ (UIAlertAction) in
+                self.mainScreeValues.allLaunches = self.sort(wayToSort: 0, objectToSort: self.mainScreeValues.allLaunches!)
+                self.mainView.tableView.reloadData()
+            }))
 
-        alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
 
-        self.present(alert, animated: true, completion: nil)
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
 }
@@ -134,17 +137,19 @@ extension MainVC: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension MainVC: UISearchBarDelegate {
-    func position(for bar: UIBarPositioning) -> UIBarPosition {
-        return .topAttached
-    }
-    
+//    func position(for bar: UIBarPositioning) -> UIBarPosition {
+//        return .topAttached
+//    }
+//    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        self.mainView.searchBar.showsCancelButton = true
-        mainScreeValues.hasSearched = true
-        if searchText.isEmpty == false {
-            mainScreeValues.filteredData = mainScreeValues.allLaunches!.filter({ $0.missionName.localizedCaseInsensitiveContains(searchText)})
+        if mainScreeValues.allLaunches != nil {
+            self.mainView.searchBar.showsCancelButton = true
+            mainScreeValues.hasSearched = true
+            if searchText.isEmpty == false {
+                mainScreeValues.filteredData = mainScreeValues.allLaunches!.filter({ $0.missionName.localizedCaseInsensitiveContains(searchText)})
+            }
+            mainView.tableView.reloadData()
         }
-        mainView.tableView.reloadData()
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {

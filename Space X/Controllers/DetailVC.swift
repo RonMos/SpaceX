@@ -23,6 +23,8 @@ class DetailVC: UIViewController {
     @IBOutlet weak var nameOfFlight: UILabel!
     @IBOutlet weak var flightNumber: UILabel!
     @IBOutlet weak var detailTextView: UITextView!
+    @IBOutlet weak var loadingInfoLabel: UILabel!
+    
     
     private func commonInit() {
         guard let flight = flight else { return }
@@ -45,10 +47,14 @@ class DetailVC: UIViewController {
     func downloadImage(from url: URL) {
         print("Download Started")
         getData(from: url) { data, response, error in
+            
+            if error != nil {
+                self.loadingInfoLabel.text = "Failed to load image"
+            }
+            
             guard let data = data, error == nil else { return }
-            print(response?.suggestedFilename ?? url.lastPathComponent)
-            print("Download Finished")
             DispatchQueue.main.async() {
+                self.loadingInfoLabel.isHidden = true
                 self.imageView.image = UIImage(data: data)
             }
         }
