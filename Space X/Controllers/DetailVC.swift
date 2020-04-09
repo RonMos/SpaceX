@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DetailViewController: UIViewController {
+class DetailVC: UIViewController {
     
     /*
      Image
@@ -27,7 +27,7 @@ class DetailViewController: UIViewController {
     private func commonInit() {
         guard let flight = flight else { return }
         nameOfFlight.text = flight.missionName
-        flightNumber.text = String(flight.flightNumber)
+        flightNumber.text = "Flight number: " + String(flight.flightNumber)
         
         if let detail = flight.detail {
             detailTextView.text = detail
