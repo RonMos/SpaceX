@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DetailViewController: UIViewController {
+class DetailVC: UIViewController {
     
     /*
      Image
@@ -23,11 +23,13 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var nameOfFlight: UILabel!
     @IBOutlet weak var flightNumber: UILabel!
     @IBOutlet weak var detailTextView: UITextView!
+    @IBOutlet weak var loadingInfoLabel: UILabel!
+    
     
     private func commonInit() {
         guard let flight = flight else { return }
         nameOfFlight.text = flight.missionName
-        flightNumber.text = String(flight.flightNumber)
+        flightNumber.text = "Flight number: " + String(flight.flightNumber)
         
         if let detail = flight.detail {
             detailTextView.text = detail
@@ -45,10 +47,14 @@ class DetailViewController: UIViewController {
     func downloadImage(from url: URL) {
         print("Download Started")
         getData(from: url) { data, response, error in
+            
+            if error != nil {
+                self.loadingInfoLabel.text = "Failed to load image"
+            }
+            
             guard let data = data, error == nil else { return }
-            print(response?.suggestedFilename ?? url.lastPathComponent)
-            print("Download Finished")
             DispatchQueue.main.async() {
+                self.loadingInfoLabel.isHidden = true
                 self.imageView.image = UIImage(data: data)
             }
         }
