@@ -202,6 +202,8 @@ extension MainVC {
         let request = AF.request(url)
         request.responseDecodable(of: Launches.self ) { (response) in
             
+            print(response.error.debugDescription)
+            
             if response.error != nil {
                 self.errorHandler()
             }

@@ -14,7 +14,7 @@ struct Launche: Decodable {
     let missionName: String
     let launch_date_utc: String
     let detail: String?
-    let links: Links
+    let links: Links?
     
     enum CodingKeys: String, CodingKey {
         case flightNumber = "flight_number"
@@ -26,7 +26,7 @@ struct Launche: Decodable {
 }
 
 struct Links: Decodable {
-    let missionPatch: String
+    let missionPatch: String?
     
     enum CodingKeys: String, CodingKey {
         case missionPatch = "mission_patch"
@@ -34,5 +34,3 @@ struct Links: Decodable {
 }
 
 typealias Launches = [Launche]
-
-

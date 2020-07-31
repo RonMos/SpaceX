@@ -37,7 +37,12 @@ class DetailVC: UIViewController {
             detailTextView.text = "Detail data is not avalible for current flight."
         }
         
-        downloadImage(from: URL(string: flight.links.missionPatch)! )
+        if let missionPatchURL = flight.links?.missionPatch {
+            downloadImage(from: URL(string: missionPatchURL)!)
+        } else {
+            self.loadingInfoLabel.text = "Patch is not existing"
+        }
+        
     }
     
     func getData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
